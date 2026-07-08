@@ -17,8 +17,8 @@ int imgCourse; // 背景画像
 int imgGoal; // ゴール画像
 int timer; // タイマー
 int StageDistance = 1800; // ステージの長さ
-int Scene = SELECT;
-int money = 120000; // 最初の持ち金
+int Scene = START;
+int money = 1000; // 最初の持ち金
 int Bedmoney; // 掛けられた金額
 int Winhorse; // 勝った馬
 int Selecthorse; // 選んだ馬
@@ -36,7 +36,8 @@ bool clickcount;
 bool clickcount2;
 bool clickcount3;
 bool clickcount4;
-bool ability;
+bool abilityScarf;
+bool abilityFarst;
 
 // ウマを表示する関数
 void DrawHorse(int x, int y, int type)
@@ -48,7 +49,6 @@ void DrawHorse(int x, int y, int type)
 void DrawText(int x, int y, int col, const char* txt, int val, int siz)
 {
 	SetFontSize(siz);
-	DrawFormatString(x + 2, y + 2, 0xffffff, txt, val);
 	DrawFormatString(x, y, col, txt, val);
 }
 
@@ -151,26 +151,26 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 					Position[i] += Speed[i];
 					if (Ability[i] == FARST_SPEED_UP)
 					{
-						Stamina[i] -= 3;
+						Stamina[i] -= 2;
 					}
 					else
 					{
 						Stamina[i]--;
 					}
-					if (Stamina[i] == 0 && Ability[i] != STAMINA_MAX)
+					if (Stamina[i] <= 0 && Ability[i] != STAMINA_MAX)
 					{
 						Speed[i] /= 2;
 						Stamina[i] = KeepStamina[i];
 					}
 					if (Position[i] >= StageDistance * 0.6 && Ability[i] == LAST_SPEED_UP)
 					{
-						Speed[i] += 1;
+						Speed[i] += 4;
 						Ability[i] = -1;
 					}
-					if (Position[i] <= StageDistance * 0.2 && Ability[i] == FARST_SPEED_UP)
+					if (Ability[i] == FARST_SPEED_UP && abilityFarst == false)
 					{
-						Speed[i] += 1.5;
-						Ability[i] = -1;
+						Speed[i] += 2;
+						abilityFarst = true;
 					}
 					if (Position[i] >= StageDistance * 0.5 && Ability[i] == GAMBLER)
 					{
@@ -199,10 +199,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 							Odds[i] += GetRand(3) + 1;
 						}
 					}
-					if (Ability[i] == SCARF && ability == false)
+					if (Ability[i] == SCARF && abilityScarf == false)
 					{
 						Speed[i] += 2.5;
-						ability = true;
+						abilityScarf = true;
 					}
 				}
 				if (timer % 120 == 0)
@@ -212,6 +212,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 						if (Ability[i] != SCARF)
 						{
 							Speed[i] += Speedup[i];
+						}
+						if (Ability[i] == SCARF)
+						{
+							Speed[i] += 0.01;
 						}
 					}
 				}
