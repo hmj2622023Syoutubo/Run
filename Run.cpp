@@ -17,14 +17,16 @@ int imgCourse; // 背景画像
 int imgGoal; // ゴール画像
 int timer; // タイマー
 int StageDistance = 1800; // ステージの長さ
-int Scene = START;
-int money = 1000; // 最初の持ち金
+int Scene = SELECT;
+int money = 120000; // 最初の持ち金
 int Bedmoney; // 掛けられた金額
 int Winhorse; // 勝った馬
 int Selecthorse; // 選んだ馬
 int mouseX, mouseY; // マウスの座標
 int dice = -1;
 int dice2 = -1;
+int dice3 = -1;
+int dice4 = -1;
 int clickstate;
 int precClickstate;
 int BGM, RaceBGM, moneySE, Resultjin,GAMEOVER;
@@ -32,6 +34,8 @@ bool pay;
 bool horsestate;
 bool clickcount;
 bool clickcount2;
+bool clickcount3;
+bool clickcount4;
 bool ability;
 
 // ウマを表示する関数
@@ -96,7 +100,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		Speed[i] = GetRand(100) / 100.0 + 0.1;
 		Speedup[i] = GetRand(100) / 100.0 + 0.1;
 		Stamina[i] = GetRand(200) + 200;
-		Odds[i] = GetRand(10) + 1;
+		Odds[i] = GetRand(10);
 		Position[i] = 0;
 		KeepStamina[i] = Stamina[i];
 		Ability[i] = GetRand(5);
@@ -165,7 +169,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 					}
 					if (Position[i] <= StageDistance * 0.2 && Ability[i] == FARST_SPEED_UP)
 					{
-						Speed[i] += 1;
+						Speed[i] += 1.5;
 						Ability[i] = -1;
 					}
 					if (Position[i] >= StageDistance * 0.5 && Ability[i] == GAMBLER)
@@ -197,7 +201,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 					}
 					if (Ability[i] == SCARF && ability == false)
 					{
-						Speed[i] += 2;
+						Speed[i] += 2.5;
 						ability = true;
 					}
 				}
@@ -263,7 +267,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 					Speed[i] = GetRand(100) / 100.0 + 0.1;
 					Speedup[i] = GetRand(100) / 100.0 + 0.1;
 					Stamina[i] = GetRand(200) + 200;
-					Odds[i] = GetRand(10) + 1;
+					Odds[i] = GetRand(10);
 					Position[i] = 0;
 					KeepStamina[i] = Stamina[i];
 					Ability[i] = GetRand(5);
@@ -286,20 +290,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 			}
 			else if(money < 100000)
 			{
-				DrawText(1200, 350, 0x000000, "1000円払ってウマのステータスを見る(最大2つ)", 0, 25);
+				DrawText(1200, 350, 0x000000, "1000円払ってウマのステータスを見る(最大3つ)", 0, 25);
 			}
 			else
 			{
-				DrawText(1200, 350, 0x000000, "10000円払ってウマのステータスを見る(最大2つ)", 0, 25);
+				DrawText(1200, 350, 0x000000, "10000円払ってウマのステータスを見る(最大4つ)", 0, 25);
 			}
 			DrawText(1200, 680, 0x000000, "所持金:%d", money, 25);
 			
 			if (clickstate != 0 && precClickstate == 0)
 			{
 				// ステータス情報処理
-				if (mouseX >= 1200 && mouseX <= 1800 && mouseY >= 310 && mouseY <= 410 && clickcount == false)
+				if (mouseX >= 1200 && mouseX <= 1800 && mouseY >= 310 && mouseY <= 410 && clickcount == false && money > 100)
 				{
-					dice = GetRand(4);
+					dice = 0;//GetRand(4);
 					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
 					clickcount = true;
 					if (money < 10000)
@@ -315,14 +319,69 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 						money -= 10000;
 					}
 				}
-				else if (mouseX >= 1200 && mouseX <= 1800 && mouseY >= 310 && mouseY <= 410 && clickcount2 == false && clickcount == true)
+				else if (mouseX >= 1200 && mouseX <= 1800 && mouseY >= 310 && mouseY <= 410 && clickcount2 == false && clickcount == true && money > 100)
 				{
 					dice2 = GetRand(4);
-					money -= 100;
+					if (dice2 == dice)
+					{
+						while (1)
+						{
+							dice2 = GetRand(4);
+							if (dice2 != dice) break;
+						}
+					}
 					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
 					clickcount2 = true;
+					if (money < 10000)
+					{
+						money -= 100;
+					}
+					else if (money < 100000)
+					{
+						money -= 1000;
+					}
+					else
+					{
+						money -= 10000;
+					}
 				}
-
+				else if (mouseX >= 1200 && mouseX <= 1800 && mouseY >= 310 && mouseY <= 410 && clickcount3 == false && clickcount2 == true && money >= 10000)
+				{
+					dice3 = GetRand(4);
+					if (dice3 == dice2 || dice3 == dice)
+					{
+						while (1)
+						{
+							dice3 = GetRand(4);
+							if (dice3 != dice2 && dice3 != dice) break;
+						}
+					}
+					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
+					clickcount3 = true;
+					if (money < 100000)
+					{
+						money -= 1000;
+					}
+					else
+					{
+						money -= 10000;
+					}
+				}
+				else if (mouseX >= 1200 && mouseX <= 1800 && mouseY >= 310 && mouseY <= 410 && clickcount4 == false && clickcount3 == true && money >= 100000)
+				{
+					dice4 = GetRand(4);
+					if (dice4 == dice3 || dice4 == dice2 || dice4 == dice)
+					{
+						while (1)
+						{
+							dice4 = GetRand(4);
+							if (dice4 != dice3 && dice4 != dice2 && dice4 != dice) break;
+						}
+					}
+					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
+					clickcount4 = true;
+					money -= 10000;
+				}
 				for (int i = 0; i < IMG_HORSE_MAX; i++)
 				{
 					if (mouseX >= Position[i] && mouseX <= Position[i] + 100 && mouseY >= i * 200 && mouseY <= i * 200 + 100)
@@ -332,48 +391,35 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 					}
 				}
 			}
-			if (dice == 0 || dice2 == 0)
+			if (dice == 0 || dice2 == 0 || dice3 == 0 || dice4 == 0)
 			{
 				for (int i = 0; i < IMG_HORSE_MAX; i++)
 				{
 					DrawFormatString(200, 50 + (i * 200), 0x000000, "%f", Speed[i]);
 				}
-				if (dice == 0 && dice2 == 0)
-				{
-					dice2 = 1;
-				}
 			}
-			if (dice == 1 || dice2 == 1)
+			if (dice == 1 || dice2 == 1 || dice3 == 1 || dice4 == 1)
 			{
 				for (int i = 0; i < IMG_HORSE_MAX; i++)
 				{
 					DrawFormatString(400, 50 + (i * 200), 0x000000, "%f", Speedup[i]);
-				}if (dice == 1 && dice2 == 1)
-				{
-					dice2 = 2;
 				}
 			}
-			if (dice == 2 || dice2 == 2)
+			if (dice == 2 || dice2 == 2 || dice3 == 2 || dice4 == 2)
 			{
 				for (int i = 0; i < IMG_HORSE_MAX; i++)
 				{
 					DrawFormatString(600, 50 + (i * 200), 0x000000, "%f", Stamina[i]);
-				}if (dice == 2 && dice2 == 2)
-				{
-					dice2 = 3;
 				}
 			}
-			if (dice == 3 || dice2 == 3)
+			if (dice == 3 || dice2 == 3 || dice3 == 3 || dice4 == 3)
 			{
 				for (int i = 0; i < IMG_HORSE_MAX; i++)
 				{
 					DrawFormatString(800, 50 + (i * 200), 0x000000, "%f", Odds[i]);
-				}if (dice == 3 && dice2 == 3)
-				{
-					dice2 = 4;
 				}
 			}
-			if (dice == 4 || dice2 == 4)
+			if (dice == 4 || dice2 == 4 || dice3 == 4 || dice4 == 4)
 			{
 				for (int i = 0; i < IMG_HORSE_MAX; i++)
 				{
@@ -402,9 +448,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 						DrawFormatString(1000, 50 + (i * 200), 0x000000, "最初だけスピードアップ　upspeedの値が０になる", 0, 25);
 					}
 					
-				}if (dice == 4 && dice2 == 4)
-				{
-					dice2 = 0;
 				}
 			}
 			break;
@@ -552,9 +595,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 						horsestate = false;
 						clickcount = false;
 						clickcount2 = false;
+						clickcount3 = false;
+						clickcount4 = false;
 						pay = false;
 						dice = -1;
 						dice2 = -1;
+						dice3 = -1;
+						dice4 = -1;
 						Bedmoney = 0;
 						PlaySoundMem(BGM, DX_PLAYTYPE_LOOP);
 						Scene = SELECT;
@@ -565,9 +612,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 						horsestate = false;
 						clickcount = false;
 						clickcount2 = false;
+						clickcount3 = false;
+						clickcount4 = false;
 						pay = false;
 						dice = -1;
 						dice2 = -1;
+						dice3 = -1;
+						dice4 = -1;
 						Bedmoney = 0;
 						PlaySoundMem(GAMEOVER, DX_PLAYTYPE_BACK);
 						Scene = OVER;
@@ -597,9 +648,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 						horsestate = false;
 						clickcount = false;
 						clickcount2 = false;
+						clickcount3 = false;
+						clickcount4 = false;
 						pay = false;
 						dice = -1;
 						dice2 = -1;
+						dice3 = -1;
+						dice4 = -1;
 						Bedmoney = 0;
 						PlaySoundMem(BGM, DX_PLAYTYPE_LOOP);
 						Scene = SELECT;
@@ -610,9 +665,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 						horsestate = false;
 						clickcount = false;
 						clickcount2 = false;
+						clickcount3 = false;
+						clickcount4 = false;
 						pay = false;
 						dice = -1;
 						dice2 = -1;
+						dice3 = -1;
+						dice4 = -1;
 						Bedmoney = 0;
 						PlaySoundMem(GAMEOVER, DX_PLAYTYPE_BACK);
 						Scene = OVER;
