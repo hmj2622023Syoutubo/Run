@@ -5,7 +5,7 @@ const int FPS = 60;
 
 enum HORSE{ RED,BLUE,BLACK,WHITE };
 enum ABILITY{STAMINA_MAX,LAST_SPEED_UP,FARST_SPEED_UP,GAMBLER,ODDS_UP,SCARF}; // 特性
-enum SCENE{START,SELECT,BED,RUN,RESULT,CLEAR,OVER};
+enum SCENE{START,SELECT,BED,RUN,RESULT,OVER};
 enum HORSEMOVE{RED1,BLUE1,BLACK1,WHITE1,RED2,BLUE2,BLACK2,WHITE2,RED3,BLUE3,BLACK3,WHITE3};
 const int IMG_HORSE_MAX = 4; // ウマの画像の枚数
 const int img_horse_max = 12;
@@ -32,6 +32,7 @@ bool pay;
 bool horsestate;
 bool clickcount;
 bool clickcount2;
+bool ability;
 
 // ウマを表示する関数
 void DrawHorse(int x, int y, int type)
@@ -39,19 +40,12 @@ void DrawHorse(int x, int y, int type)
 	DrawExtendGraph(x, y, x+100, y+100, imgHorse[type], true);
 }
 
-// 影を付けた文字列を表示する関数
+// 文字列を表示する関数
 void DrawText(int x, int y, int col, const char* txt, int val, int siz)
 {
 	SetFontSize(siz);
-	DrawFormatString(x + 2, y + 2, 0x000000, txt, val);
+	DrawFormatString(x + 2, y + 2, 0xffffff, txt, val);
 	DrawFormatString(x, y, col, txt, val);
-}
-
-int LoadSoundMemWithCheck(const char* file)
-{
-	int res = LoadSoundMem(file);
-	if (res == -1) { MessageBox(GetMainWindowHandle(), file, "音声の読み込みに失敗", MB_OK | MB_ICONSTOP); }
-	return res;
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
@@ -89,7 +83,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	imgGoal = LoadGraph("image/ゴール.png");
 
 	// BGMを読み込む
-	BGM = LoadSoundMemWithCheck("music/BGM.wav");
+	BGM = LoadSoundMem("music/BGM.wav");
 	RaceBGM = LoadSoundMem("music/RaceBGM.wav");
 	moneySE = LoadSoundMem("music/お金.wav");
 	Resultjin = LoadSoundMem("music/Result.wav");
@@ -99,8 +93,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	float Speed[IMG_HORSE_MAX], Speedup[IMG_HORSE_MAX], Stamina[IMG_HORSE_MAX], Odds[IMG_HORSE_MAX], Position[IMG_HORSE_MAX], KeepStamina[IMG_HORSE_MAX], Ability[IMG_HORSE_MAX];
 	for (int i = 0; i < IMG_HORSE_MAX; i++)
 	{
-		Speed[i] = GetRand(100) / 100.0;
-		Speedup[i] = GetRand(100) / 100.0;
+		Speed[i] = GetRand(100) / 100.0 + 0.1;
+		Speedup[i] = GetRand(100) / 100.0 + 0.1;
 		Stamina[i] = GetRand(200) + 200;
 		Odds[i] = GetRand(10) + 1;
 		Position[i] = 0;
@@ -119,6 +113,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		{
 			DrawGraph(0, 0,imgCourse,true);
 			DrawGraph(1800, 0, imgGoal, true);
+			DrawLine(StageDistance * 0.5, 0, StageDistance * 0.5, 720, 0x000000);
 			if (timer >= 0 && timer < 60)
 			{
 				DrawText(900, 300, 0xffffff, "3",0, 100);
@@ -184,12 +179,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 							Odds[i] *= 3;
 							Ability[i] = -1;
 						}
-						else
+						else if(rand == 0)
 						{
-							Speed[i] / 2;
-							Speedup[i] / 2;
-							Stamina[i] / 2;
-							Odds[i] * 0;
+							Speed[i] = 0;
+							Speedup[i] /= 2;
+							Stamina[i] /= 2;
+							Odds[i] = 0;
 							Ability[i] = -1;
 						}
 					}
@@ -197,13 +192,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 					{
 						if (timer % 120 == 0)
 						{
-							Odds[i] += GetRand(3);
+							Odds[i] += GetRand(3) + 1;
 						}
 					}
-					if (Ability[i] == SCARF)
+					if (Ability[i] == SCARF && ability == false)
 					{
 						Speed[i] += 2;
-						Ability[i] = -1;
+						ability = true;
 					}
 				}
 				if (timer % 120 == 0)
@@ -265,8 +260,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 			{
 				for (int i = 0; i < IMG_HORSE_MAX; i++)
 				{
-					Speed[i] = GetRand(100) / 100.0;
-					Speedup[i] = GetRand(100) / 100.0;
+					Speed[i] = GetRand(100) / 100.0 + 0.1;
+					Speedup[i] = GetRand(100) / 100.0 + 0.1;
 					Stamina[i] = GetRand(200) + 200;
 					Odds[i] = GetRand(10) + 1;
 					Position[i] = 0;
@@ -285,7 +280,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 			DrawText(800, 0, 0x000000, "ODDS", 0, 25);
 			DrawText(1000, 0, 0x000000, "ABILITY", 0, 25);
 			DrawBox(1200, 310, 1800, 410, 0x000000, false);
-			DrawText(1200, 350, 0x000000, "100円払ってウマのステータスを見る(最大2つ)", 0, 25);
+			if (money < 10000)
+			{
+				DrawText(1200, 350, 0x000000, "100円払ってウマのステータスを見る(最大2つ)", 0, 25);
+			}
+			else if(money < 100000)
+			{
+				DrawText(1200, 350, 0x000000, "1000円払ってウマのステータスを見る(最大2つ)", 0, 25);
+			}
+			else
+			{
+				DrawText(1200, 350, 0x000000, "10000円払ってウマのステータスを見る(最大2つ)", 0, 25);
+			}
 			DrawText(1200, 680, 0x000000, "所持金:%d", money, 25);
 			
 			if (clickstate != 0 && precClickstate == 0)
@@ -294,9 +300,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 				if (mouseX >= 1200 && mouseX <= 1800 && mouseY >= 310 && mouseY <= 410 && clickcount == false)
 				{
 					dice = GetRand(4);
-					money -= 100;
 					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
 					clickcount = true;
+					if (money < 10000)
+					{
+						money -= 100;
+					}
+					else if (money < 100000)
+					{
+						money -= 1000;
+					}
+					else
+					{
+						money -= 10000;
+					}
 				}
 				else if (mouseX >= 1200 && mouseX <= 1800 && mouseY >= 310 && mouseY <= 410 && clickcount2 == false && clickcount == true)
 				{
@@ -401,6 +418,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 			DrawText(800, 300, 0x000000, "-500円", 0, 50);
 			DrawText(1000, 100, 0x000000, "+1000円", 0, 50);
 			DrawText(1000, 300, 0x000000, "-1000円", 0, 50);
+			DrawText(750, 200, 0x000000, "オールイン", 0, 50);
+			DrawText(750, 400, 0x000000, "キャンセル", 0, 50);
 			DrawText(825, 500, 0x000000, "決定", 0, 50);
 			DrawBox(600, 100, 760, 150, 0x000000, false);
 			DrawBox(600, 300, 760, 350, 0x000000, false);
@@ -409,6 +428,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 			DrawBox(1000, 100, 1180, 150, 0x000000, false);
 			DrawBox(1000, 300, 1180, 350, 0x000000, false);
 			DrawBox(800, 500, 960, 550, 0x000000, false);
+			DrawBox(750, 200, 1010, 250, 0x000000, false);
+			DrawBox(750, 400, 1010, 450, 0x000000, false);
 			if (clickstate != 0 && precClickstate == 0)
 			{
 				if (mouseX >= 600 && mouseX <= 760 && mouseY >= 100 && mouseY <= 150 && money >= 100)
@@ -445,6 +466,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 				{
 					money += 1000;
 					Bedmoney -= 1000;
+					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
+				}
+				if (mouseX >= 750 && mouseX <= 1010 && mouseY >= 200 && mouseY <= 250 && money != 0)
+				{
+					Bedmoney += money;
+					money = 0;
+					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
+				}
+				if (mouseX >= 750 && mouseX <= 1010 && mouseY >= 400 && mouseY <= 450 && Bedmoney != 0)
+				{
+					money += Bedmoney;
+					Bedmoney = 0;
 					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
 				}
 				if (mouseX >= 800 && mouseX <= 960 && mouseY >= 500 && mouseY <= 550)
@@ -611,12 +644,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 				Scene = START;
 			}
 			break;
-
-		case CLEAR:
-			DrawText(700, 100, 0x000000, "CLEAR!!!", 0, 100);
-			DrawText(500, 400, 0x000000, "まだ続ける？", 0, 50);
-			DrawText(1000, 400, 0x000000, "もうやめとく？", 0, 50);
-
 		}
 		ScreenFlip(); // 裏画面の内容を表画面に反映させる
 		WaitTimer(1000 / FPS); // 一定時間待つ
