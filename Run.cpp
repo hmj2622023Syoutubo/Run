@@ -36,8 +36,8 @@ bool clickcount;
 bool clickcount2;
 bool clickcount3;
 bool clickcount4;
-bool abilityScarf;
-bool abilityFarst;
+bool abilityScarf = false;
+bool abilityFarst = false;
 
 // ウマを表示する関数
 void DrawHorse(int x, int y, int type)
@@ -215,7 +215,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 						}
 						if (Ability[i] == SCARF)
 						{
-							Speed[i] += 0.01;
+							Speed[i] += 0.1;
 						}
 					}
 				}
@@ -572,13 +572,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 				if (timer >= 210)
 				{
 					DrawText(925, 450, 0x000000, "オッズ　%d倍", Odds[Selecthorse], 25);
-				}
-				if (timer >= 210)
-				{
 					DrawText(900, 500, 0x000000, "増えたお金　%d円", Bedmoney* Odds[Selecthorse], 25);
-				}
-				if (timer >= 210)
-				{
 					DrawText(850, 550, 0x000000, "所持金　%d円", money, 50);
 				}
 				if (timer >= 240 && money == 0)
@@ -702,6 +696,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 			DrawBox(800, 600, 1110, 650, 0x000000, false);
 			if (clickstate != 0 && precClickstate == 0 && mouseX >= 800 && mouseX <= 1110 && mouseY >= 600 && mouseY <= 650)
 			{
+				StopSoundMem(GAMEOVER);
 				timer = 0;
 				money = 1000;
 				Scene = START;
