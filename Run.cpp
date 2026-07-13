@@ -36,8 +36,6 @@ bool clickcount;
 bool clickcount2;
 bool clickcount3;
 bool clickcount4;
-bool abilityScarf = false;
-bool abilityFarst = false;
 
 // ウマを表示する関数
 void DrawHorse(int x, int y, int type)
@@ -100,7 +98,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		Speed[i] = GetRand(100) / 100.0 + 0.1;
 		Speedup[i] = GetRand(100) / 100.0 + 0.1;
 		Stamina[i] = GetRand(200) + 200;
-		Odds[i] = GetRand(10);
+		Odds[i] = GetRand(30);
 		Position[i] = 0;
 		KeepStamina[i] = Stamina[i];
 		Ability[i] = GetRand(5);
@@ -148,7 +146,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 				{
 					DrawHorse(Position[i], i * 200, i);
 					DrawBox(Position[Selecthorse], Selecthorse * 200, Position[Selecthorse] + 100, Selecthorse * 200 + 100, 0x000000, false);
-					Position[i] += Speed[i];
 					if (Ability[i] == FARST_SPEED_UP)
 					{
 						Stamina[i] -= 2;
@@ -167,10 +164,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 						Speed[i] += 4;
 						Ability[i] = -1;
 					}
-					if (Ability[i] == FARST_SPEED_UP && abilityFarst == false)
+					if (Ability[i] == FARST_SPEED_UP && Position[i] == 0)
 					{
 						Speed[i] += 2;
-						abilityFarst = true;
 					}
 					if (Position[i] >= StageDistance * 0.5 && Ability[i] == GAMBLER)
 					{
@@ -196,14 +192,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 					{
 						if (timer % 120 == 0)
 						{
-							Odds[i] += GetRand(3) + 1;
+							Odds[i] += 10 + GetRand(10);
 						}
 					}
-					if (Ability[i] == SCARF && abilityScarf == false)
+					if (Ability[i] == SCARF && Position[i] == 0)
 					{
-						Speed[i] += 2.5;
-						abilityScarf = true;
+						Speed[i] += 2;
 					}
+					Position[i] += Speed[i];
 				}
 				if (timer % 120 == 0)
 				{
@@ -219,14 +215,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 						}
 					}
 				}
-				if (timer % 15 <= 4 && timer)
+				if (timer % 15 <= 4)
 				{
 					imgHorse[RED] = imgHorse2[RED2];
 					imgHorse[BLUE] = imgHorse2[BLUE2];
 					imgHorse[BLACK] = imgHorse2[BLACK2];
 					imgHorse[WHITE] = imgHorse2[WHITE2];
 				}
-				else if (timer % 15 >= 5 && timer % 15 <= 9)
+				else if (timer % 15 >= 5 && timer % 15 <= 8)
 				{
 					imgHorse[RED] = imgHorse2[RED1];
 					imgHorse[BLUE] = imgHorse2[BLUE1];
@@ -268,10 +264,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 			{
 				for (int i = 0; i < IMG_HORSE_MAX; i++)
 				{
-					Speed[i] = GetRand(100) / 100.0 + 0.1;
-					Speedup[i] = GetRand(100) / 100.0 + 0.1;
-					Stamina[i] = GetRand(200) + 200;
-					Odds[i] = GetRand(10);
+					Speed[i] = GetRand(100) / 100.0 + 0.5;
+					Speedup[i] = GetRand(100) / 100.0 + 0.5;
+					Stamina[i] = GetRand(200) + 300;
+					Odds[i] = GetRand(20);
 					Position[i] = 0;
 					KeepStamina[i] = Stamina[i];
 					Ability[i] = GetRand(5);
@@ -307,7 +303,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 				// ステータス情報処理
 				if (mouseX >= 1200 && mouseX <= 1800 && mouseY >= 310 && mouseY <= 410 && clickcount == false && money > 100)
 				{
-					dice = 0;//GetRand(4);
+					dice = GetRand(4);
 					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
 					clickcount = true;
 					if (money < 10000)
