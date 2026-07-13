@@ -60,22 +60,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	SetDrawScreen(DX_SCREEN_BACK); // •`‰æ–Ê‚ð— ‰æ–Ê‚É‚·‚é
 
 	// ‰æ‘œ‚ð“Ç‚Ýž‚Þ
-	imgHorse[RED] = LoadGraph("image/Ô”n‚P.png");
-	imgHorse[BLUE] = LoadGraph("image/Â”n‚P.png");
-	imgHorse[BLACK] = LoadGraph("image/•”n‚P.png");
-	imgHorse[WHITE] = LoadGraph("image/”’”n‚P.png");
+	imgHorse[RED] = LoadGraph("image/Ô”n1.png");
+	imgHorse[BLUE] = LoadGraph("image/Â”n1.png");
+	imgHorse[BLACK] = LoadGraph("image/•”n1.png");
+	imgHorse[WHITE] = LoadGraph("image/”’”n1.png");
 
-	imgHorse2[RED1] = LoadGraph("image/Ô”n‚P.png");
-	imgHorse2[RED2] = LoadGraph("image/Ô”n‚Q.png");
+	imgHorse2[RED1] = LoadGraph("image/Ô”n1.png");
+	imgHorse2[RED2] = LoadGraph("image/Ô”n2.png");
 	imgHorse2[RED3] = LoadGraph("image/Ô”n3.png");
-	imgHorse2[BLUE1] = LoadGraph("image/Â”n‚P.png");
-	imgHorse2[BLUE2] = LoadGraph("image/Â”n‚Q.png");
+	imgHorse2[BLUE1] = LoadGraph("image/Â”n1.png");
+	imgHorse2[BLUE2] = LoadGraph("image/Â”n2.png");
 	imgHorse2[BLUE3] = LoadGraph("image/Â”n3.png");
-	imgHorse2[BLACK1] = LoadGraph("image/•”n‚P.png");
-	imgHorse2[BLACK2] = LoadGraph("image/•”n‚Q.png");
+	imgHorse2[BLACK1] = LoadGraph("image/•”n1.png");
+	imgHorse2[BLACK2] = LoadGraph("image/•”n2.png");
 	imgHorse2[BLACK3] = LoadGraph("image/•”n3.png");
-	imgHorse2[WHITE1] = LoadGraph("image/”’”n‚P.png");
-	imgHorse2[WHITE2] = LoadGraph("image/”’”n‚Q.png");
+	imgHorse2[WHITE1] = LoadGraph("image/”’”n2.png");
+	imgHorse2[WHITE2] = LoadGraph("image/”’”n2.png");
 	imgHorse2[WHITE3] = LoadGraph("image/”’”n3.png");
 
 	imgHuman[0] = LoadGraph("image/â–]lŠÔ1.png");
@@ -98,7 +98,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		Speed[i] = GetRand(100) / 100.0 + 0.1;
 		Speedup[i] = GetRand(100) / 100.0 + 0.1;
 		Stamina[i] = GetRand(200) + 200;
-		Odds[i] = GetRand(30);
+		Odds[i] = GetRand(15);
 		Position[i] = 0;
 		KeepStamina[i] = Stamina[i];
 		Ability[i] = GetRand(5);
@@ -267,7 +267,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 					Speed[i] = GetRand(100) / 100.0 + 0.5;
 					Speedup[i] = GetRand(100) / 100.0 + 0.5;
 					Stamina[i] = GetRand(200) + 300;
-					Odds[i] = GetRand(20);
+					Odds[i] = GetRand(15);
 					Position[i] = 0;
 					KeepStamina[i] = Stamina[i];
 					Ability[i] = GetRand(5);
@@ -455,60 +455,92 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		case BED:
 			DrawText(800, 0, 0x000000, "“q‚¯‚é‚¨‹à:%d‰~", Bedmoney, 25);
 			DrawText(800, 650, 0x000000, "Ž‚Á‚Ä‚¢‚é‚¨‹à:%d‰~", money, 25);
-			DrawText(600, 100, 0x000000, "+100‰~", 0, 50);
-			DrawText(600, 300, 0x000000, "-100‰~", 0, 50);
-			DrawText(800, 100, 0x000000, "+500‰~", 0, 50);
-			DrawText(800, 300, 0x000000, "-500‰~", 0, 50);
-			DrawText(1000, 100, 0x000000, "+1000‰~", 0, 50);
-			DrawText(1000, 300, 0x000000, "-1000‰~", 0, 50);
+			DrawText(400, 100, 0x000000, "+100‰~", 0, 50);
+			DrawText(400, 300, 0x000000, "-100‰~", 0, 50);
+			DrawText(600, 100, 0x000000, "+500‰~", 0, 50);
+			DrawText(600, 300, 0x000000, "-500‰~", 0, 50);
+			DrawText(800, 100, 0x000000, "+1000‰~", 0, 50);
+			DrawText(800, 300, 0x000000, "-1000‰~", 0, 50);
+			DrawText(1000, 100, 0x000000, "+5000‰~", 0, 50);
+			DrawText(1000, 300, 0x000000, "-5000‰~", 0, 50);
+			DrawText(1200, 100, 0x000000, "+10000‰~", 0, 50);
+			DrawText(1200, 300, 0x000000, "-10000‰~", 0, 50);
 			DrawText(750, 200, 0x000000, "ƒI[ƒ‹ƒCƒ“", 0, 50);
 			DrawText(750, 400, 0x000000, "ƒLƒƒƒ“ƒZƒ‹", 0, 50);
 			DrawText(825, 500, 0x000000, "Œˆ’è", 0, 50);
+			DrawBox(400, 100, 560, 150, 0x000000, false);
+			DrawBox(400, 300, 560, 350, 0x000000, false);
 			DrawBox(600, 100, 760, 150, 0x000000, false);
 			DrawBox(600, 300, 760, 350, 0x000000, false);
-			DrawBox(800, 100, 960, 150, 0x000000, false);
-			DrawBox(800, 300, 960, 350, 0x000000, false);
+			DrawBox(800, 100, 980, 150, 0x000000, false);
+			DrawBox(800, 300, 980, 350, 0x000000, false);
 			DrawBox(1000, 100, 1180, 150, 0x000000, false);
 			DrawBox(1000, 300, 1180, 350, 0x000000, false);
+			DrawBox(1200, 100, 1410, 150, 0x000000, false);
+			DrawBox(1200, 300, 1410, 350, 0x000000, false);
 			DrawBox(800, 500, 960, 550, 0x000000, false);
 			DrawBox(750, 200, 1010, 250, 0x000000, false);
 			DrawBox(750, 400, 1010, 450, 0x000000, false);
 			if (clickstate != 0 && precClickstate == 0)
 			{
-				if (mouseX >= 600 && mouseX <= 760 && mouseY >= 100 && mouseY <= 150 && money >= 100)
+				if (mouseX >= 400 && mouseX <= 560 && mouseY >= 100 && mouseY <= 150 && money >= 100)
 				{
 					money -= 100;
 					Bedmoney += 100;
 					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
 				}
-				if (mouseX >= 600 && mouseX <= 760 && mouseY >= 300 && mouseY <= 350 && Bedmoney >= 100)
+				if (mouseX >= 400 && mouseX <= 560 && mouseY >= 300 && mouseY <= 350 && Bedmoney >= 100)
 				{
 					money += 100;
 					Bedmoney -= 100;
 					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
 				}
-				if (mouseX >= 800 && mouseX <= 960 && mouseY >= 100 && mouseY <= 150 && money >= 500)
+				if (mouseX >= 600 && mouseX <= 760 && mouseY >= 100 && mouseY <= 150 && money >= 500)
 				{
 					money -= 500;
 					Bedmoney += 500;
 					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
 				}
-				if (mouseX >= 800 && mouseX <= 960 && mouseY >= 300 && mouseY <= 350 && Bedmoney>= 500)
+				if (mouseX >= 600 && mouseX <= 760 && mouseY >= 300 && mouseY <= 350 && Bedmoney>= 500)
 				{
 					money += 500;
 					Bedmoney -= 500;
 					PlaySoundMem(moneySE,DX_PLAYTYPE_BACK);
 				}
-				if (mouseX >= 1000 && mouseX <= 1180 && mouseY >= 100 && mouseY <= 150 && money >=1000)
+				if (mouseX >= 800 && mouseX <= 980 && mouseY >= 100 && mouseY <= 150 && money >=1000)
 				{
 					money -= 1000;
 					Bedmoney += 1000;
 					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
 				}
-				if (mouseX >= 1000 && mouseX <= 1180 && mouseY >= 300 && mouseY <= 350 && Bedmoney >= 1000)
+				if (mouseX >= 800 && mouseX <= 980 && mouseY >= 300 && mouseY <= 350 && Bedmoney >= 1000)
 				{
 					money += 1000;
 					Bedmoney -= 1000;
+					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
+				}
+				if (mouseX >= 1000 && mouseX <= 1180 && mouseY >= 100 && mouseY <= 150 && money >= 5000)
+				{
+					money -= 5000;
+					Bedmoney += 5000;
+					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
+				}
+				if (mouseX >= 1000 && mouseX <= 1180 && mouseY >= 300 && mouseY <= 350 && Bedmoney >= 5000)
+				{
+					money += 5000;
+					Bedmoney -= 5000;
+					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
+				}
+				if (mouseX >= 1200 && mouseX <= 1410 && mouseY >= 100 && mouseY <= 150 && money >= 10000)
+				{
+					money -= 10000;
+					Bedmoney += 10000;
+					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
+				}
+				if (mouseX >= 1200 && mouseX <= 1410 && mouseY >= 300 && mouseY <= 350 && Bedmoney >= 10000)
+				{
+					money += 10000;
+					Bedmoney -= 10000;
 					PlaySoundMem(moneySE, DX_PLAYTYPE_BACK);
 				}
 				if (mouseX >= 750 && mouseX <= 1010 && mouseY >= 200 && mouseY <= 250 && money != 0)
